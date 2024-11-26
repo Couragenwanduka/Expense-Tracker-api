@@ -19,6 +19,10 @@ export const SignupSchema = Joi.object({
         "string.empty": "Password is required",
         "string.min": "Password should have at least 8 characters"
     }),
+    country:Joi.string().required().messages({
+        "string.base": "Country should be a string",
+        "string.empty": "Country is required"
+    }),
     age: Joi.number().integer().min(10).messages({
         "number.base": "Age should be a number",
         "number.integer": "Age should be an integer",

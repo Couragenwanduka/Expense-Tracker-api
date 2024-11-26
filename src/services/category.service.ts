@@ -1,4 +1,4 @@
-import Category from "../model/caterogies";
+import Category from "../model/category";
 import { Icategory } from "../interface/category.interface";
 
 export const saveCategory = async(category:Icategory): Promise<void | null> => {
@@ -11,6 +11,16 @@ export const saveCategory = async(category:Icategory): Promise<void | null> => {
         saveCategory.save()
     }catch(error){
         console.error("Error saving category", error)
+        return null
+    }
+}
+
+export const findAllCategories = async(skip:any, limit:number): Promise<Icategory[] | null> => {
+    try{
+        const categories = await Category.find().skip(skip).limit(limit).exec()
+        return categories
+    }catch(error){
+        console.error("Error fetching all categories", error)
         return null
     }
 }
@@ -35,7 +45,7 @@ export const findingCategoryById = async(id:string): Promise<Icategory|null> => 
     }
 }
 
-export const updateCategory = async(id:string,category:Icategory): Promise<Icategory|null> => {
+export const updateCategory = async(id:string,category:Partial<Icategory>): Promise<Icategory|null> => {
    try{
        const update = await Category.findByIdAndUpdate(id, category, { new:true } )
        return update

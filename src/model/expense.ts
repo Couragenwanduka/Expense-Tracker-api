@@ -1,22 +1,15 @@
-import { Schema, model , Types} from "mongoose";
+import { Schema, model} from "mongoose";
+import { Iexpense } from "../interface/expense.interface";
 
-interface Expense {
-    user: Types.ObjectId;
-    caterogy: Types.ObjectId;
-    name: string;
-    totalUnit: number;
-    pricePerUnit: number;
-}
-
-const expenseSchema = new Schema<Expense>({
+const expenseSchema = new Schema<Iexpense>({
     user:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    caterogy:{
+    category:{
         type: Schema.Types.ObjectId,
-        ref: 'Caterogies',
+        ref: 'Category',
         required: true
     },
     name:{
@@ -27,9 +20,13 @@ const expenseSchema = new Schema<Expense>({
         type: Number,
         required: true
     },
-    pricePerUnit:{
+    price:{
         type: Number,
         required: true
+    },
+    date:{
+        type:Date,
+        default: Date.now
     }
 },
 {
@@ -39,6 +36,6 @@ const expenseSchema = new Schema<Expense>({
 }
 )
 
-const Expenses = model<Expense>('Expense', expenseSchema);
+const Expenses = model<Iexpense>('Expense', expenseSchema);
 
 export default Expenses;
