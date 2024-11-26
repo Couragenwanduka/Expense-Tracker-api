@@ -16,15 +16,25 @@ export const createCategorySchema = Joi.object({
 })
 
 export const customJoi = Joi.extend((joi) => ({
-    type: 'objectId',
-    base: joi.string(),
-    messages: {
-      'objectId.base': '{{#label}} must be a valid ObjectId',
-    },
-    validate(value, helpers) {
-      if (!mongoose.isValidObjectId(value)) {
-        return { value, errors: helpers.error('objectId.base') };
-      }
-      return { value };
-    },
-  }));
+  type: 'objectId',
+  base: joi.object({
+    id: joi.string()  // Ensure the nested 'id' is a string
+  }),
+  messages: {
+    'objectId.base': '{{#label}} must be a valid ObjectId',
+  },
+  validate(value, helpers) {
+    // Ensure the 'id' field is a string and check if it's a valid ObjectId
+    if (typeof value.id !== 'string') {
+      return { value, errors: helpers.error('objectId.base') };
+    }
+
+    if (!mongoose.isValidObjectId(value.id)) {
+      console.log('Invalid ObjectId:', value.id);  // Debug invalid ObjectId case
+      return { value, errors: helpers.error('objectId.base') };
+    }
+
+    return { value };
+  },
+}));
+

@@ -31,3 +31,13 @@ export const findUserByEmail = async (email: string):Promise<any | null> => {
         return null;
     }
 }
+
+export const findUserById = async (id: string):Promise<any | null> => {
+    try{
+        const user = await User.findById(id).exec()
+        return user
+    }catch(error){
+        console.error('Error finding user by id', error);
+        return null;
+    }
+}

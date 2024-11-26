@@ -1,4 +1,4 @@
-import {saveCategory, findingCategory, updateCategory, deleteCategory, findingCategoryById }from '../services/category.service';
+import {saveCategory, findingCategory, updateCategory, deleteCategory, findingCategoryById, findAllCategories }from '../services/category.service';
 import { Response, Request, NextFunction } from 'express';
 import BadRequest from '../error/error';
 import {Icategory} from "../interface/category.interface"
@@ -18,12 +18,35 @@ export const createCategory = async(req:Request, res:Response, next:NextFunction
         isDefault
     }
     await saveCategory(category)
-    res.status(200).send('Category saved successfully')
+    res.status(200).send({message:'Category saved successfully', success: true})
    }catch(error){
     next(error)
    }
 }
 
+export const getAllCategories = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      // Parse skip and limit from query, default to 0 and 20 respectively
+      const { skip = 0, limit = 20 } = req.query;
+  
+      const parsedSkip = parseInt(skip as string);
+      const parsedLimit = parseInt(limit as string);
+  
+      // Fetch categories using the skip and limit values
+      const categories = await findAllCategories(parsedSkip, parsedLimit);
+  
+      // Send response with pagination data
+      res.status(200).json({
+        success: true,
+        page: Math.ceil(parsedSkip / parsedLimit) + 1,  // Calculate current page
+        limit: parsedLimit,
+        data: categories,  // Return categories data
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
 export const updateCategories = async(req:Request, res:Response, next:NextFunction): Promise<void> => {
     try{
         const {id} = req.params;
@@ -34,14 +57,14 @@ export const updateCategories = async(req:Request, res:Response, next:NextFuncti
             throw new BadRequest('category not found')
         }
 
-        let updatedCategory: Icategory = {...category}
-        if (name) updatedCategory.name = name;
-        if (description) updatedCategory.description = description;
-        if (isDefault) updatedCategory.isDefault = isDefault
+        const updatedData: Partial<Icategory> = {}; // Use Partial to only update the fields that are provided
+        if (name) updatedData.name = name;
+        if (description) updatedData.description = description;
+        if (isDefault !== undefined) updatedData.isDefault = isDefault;
 
-        await updateCategory(id,updatedCategory)
+        await updateCategory(id,updatedData)
 
-        res.status(201).send('update successfull')
+        res.status(201).send({message:'update successfull'})
     }catch(error){
         next(error)
     }
@@ -62,7 +85,7 @@ export const deleteACategory = async(req:Request, res:Response, next:NextFunctio
 
         await deleteCategory(id)
         
-        res.status(200).send('Category deleted successfully')
+        res.status(200).send({mesaage:'Category deleted successfully'})
     }catch(error){
         next(error)
     }
