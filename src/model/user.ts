@@ -20,6 +20,18 @@ const userSchema = new Schema<Iuser>({
         type:String,
         required:true
     },
+    country:{
+        type: String,
+        required:true
+    },
+    currency:{
+       type: String,
+       required: true
+    },
+    flag:{
+        type: String,
+        required:true
+    },
     age:{
         type:Number,
         min:10,

@@ -7,17 +7,17 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 export const createUser = async( req:Request, res:Response, next:NextFunction ): Promise<void> => {
     try{
-        const { firstName, lastName, email, password, age, gender, dateofbirth, yearlyIncome }:Iuser = req.body;
+        const { firstName, lastName, email, password, country, age, gender, dateofbirth, yearlyIncome }:Iuser = req.body;
 
         const exisitingUser = await findUserByEmail(email)
         if(exisitingUser){
             throw new BadRequest('Email already exists');
         }
 
-        const user: Iuser = { firstName, lastName, email, password, age, gender, dateofbirth, yearlyIncome };
-        await saveUser(user);
+        const user:Partial<Iuser> = { firstName, lastName, email, password,country, age, gender, dateofbirth, yearlyIncome };
+        const savedUser = await saveUser(user);
 
-        res.status(201).json({message: 'user saved successfully'});
+        res.status(201).json({message: 'user saved successfully', savedUser});
     }catch(error){
        next(error)
     }
