@@ -49,3 +49,17 @@ export const findUserById = async (id: string):Promise<any | null> => {
         return null;
     }
 }
+
+export const updateSubscribe = async(id:string, update:any) => {
+    try{
+        const user = await User.findByIdAndUpdate(id, {subscribed:{
+            isSubscribe:update.isSubscribe,
+            paymentDate:update.paymentDate,
+            paymentData:update.paymentData,
+        }}, {new: true}).exec()
+        return user
+    }catch(error){
+        console.error('Error updating subscription', error);
+        return null;
+    }
+}
