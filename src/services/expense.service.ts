@@ -65,3 +65,13 @@ export const findAllExpense = async(skip:any, limit:number) => {
     }
 }
 
+export const findExpenseByUserId = async(id:string) => {
+    try{
+        const expense = await Expenses.find({user:id}).exec();
+        return expense;
+    }catch(error){
+        console.error('An error occured while finding expenses by user', error)
+          return null
+    }
+}
+

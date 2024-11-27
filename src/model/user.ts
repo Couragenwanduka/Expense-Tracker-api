@@ -47,6 +47,18 @@ const userSchema = new Schema<Iuser>({
     },
     yearlyIncome:{
         type: Number,
+    },
+    subscribed:{
+        isSubscribe:{
+            type: Boolean,
+            default:false
+        },
+        paymentDate:{
+            type: Date
+        },
+        paymentData:{
+            type:String
+        }
     }
 },
   {
