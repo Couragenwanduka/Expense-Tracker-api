@@ -1,3 +1,8 @@
+interface subscription {
+    isSubscribe ?: boolean
+    paymentDate ?: Date
+    paymentData?: string
+}
 export interface Iuser {
     firstName: string
     lastName: string
@@ -10,4 +15,5 @@ export interface Iuser {
     gender: string
     dateofbirth?: Date
     yearlyIncome?: number
+    subscribed?: subscription
 }
